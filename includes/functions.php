@@ -307,17 +307,21 @@ function encrypt_text($value) /* 256bit Rijndael encryption */
 {
    if(!$value) return false;
  
-   $crypttext = mcrypt_encrypt(MCRYPT_RIJNDAEL_256, 'SECURE_STRING_1', $value, MCRYPT_MODE_ECB, 'SECURE_STRING_2');
-   return trim(base64_encode($crypttext));
+  // $crypttext = mcrypt_encrypt(MCRYPT_RIJNDAEL_256, 'SECURE_STRING_1', $value, MCRYPT_MODE_ECB, 'SECURE_STRING_2');
+ //  return trim(base64_encode($crypttext));
+ 
+ return $value;
 }
  
 function decrypt_text($value) /* Decryption Functions */
 { 
    if(!$value) return false;
  
-   $crypttext = base64_decode($value);
-   $decrypttext = mcrypt_decrypt(MCRYPT_RIJNDAEL_256, 'SECURE_STRING_1', $crypttext, MCRYPT_MODE_ECB, 'SECURE_STRING_2');
-   return trim($decrypttext);
+  // $crypttext = base64_decode($value);
+  // $decrypttext = mcrypt_decrypt(MCRYPT_RIJNDAEL_256, 'SECURE_STRING_1', $crypttext, MCRYPT_MODE_ECB, 'SECURE_STRING_2');
+   //return trim($decrypttext);
+   
+   return $value;
 }
 
 
@@ -699,7 +703,7 @@ function start_app(){ /* Initialize Different Variables */
 	global $mysqli,$enablecache,$purgepage,$membershippage,$indexpage,$candidatepage,$uploadpath,$matchpage,$sitepath,$contactemail,$explorepage,$inboxpage,$homepage,$accountpage,$searchpage,$logoutpage,$photospage,$settingspage,$profilepage;
 	$mysqli = new mysqli("localhost", "root", "root", "dss");
 	$contactemail = "info@info.com";
-	$sitepath ="http://localhost:90/dss";
+	$sitepath ="http://localhost/dss";
 	
 	$enablecache = 0;
 	
