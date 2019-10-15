@@ -307,21 +307,29 @@ function encrypt_text($value) /* 256bit Rijndael encryption */
 {
    if(!$value) return false;
  
-  // $crypttext = mcrypt_encrypt(MCRYPT_RIJNDAEL_256, 'SECURE_STRING_1', $value, MCRYPT_MODE_ECB, 'SECURE_STRING_2');
- //  return trim(base64_encode($crypttext));
+ $key = 'qkwjdiw239&&jdafweihbrhnan&^%$ggdnawhd4njshjwuuO';
  
- return $value;
+	$encryption_key = base64_decode($key);
+    $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+    $encrypted = openssl_encrypt($value, 'aes-256-cbc', $encryption_key, 0, $iv);
+    return trim(base64_encode($encrypted . '::' . $iv));
+
+ 
+
 }
  
 function decrypt_text($value) /* Decryption Functions */
 { 
    if(!$value) return false;
  
-  // $crypttext = base64_decode($value);
-  // $decrypttext = mcrypt_decrypt(MCRYPT_RIJNDAEL_256, 'SECURE_STRING_1', $crypttext, MCRYPT_MODE_ECB, 'SECURE_STRING_2');
-   //return trim($decrypttext);
+    $key = 'qkwjdiw239&&jdafweihbrhnan&^%$ggdnawhd4njshjwuuO';
+	 $encryption_key = base64_decode($key);
+    list($encrypted_data, $iv) = array_pad(explode('::', base64_decode($value), 
+    2),2,null);
+    return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
+
    
-   return $value;
+
 }
 
 
@@ -700,7 +708,7 @@ return $g;
 
 
 function start_app(){ /* Initialize Different Variables */
-	global $mysqli,$enablecache,$purgepage,$membershippage,$indexpage,$candidatepage,$uploadpath,$matchpage,$sitepath,$contactemail,$explorepage,$inboxpage,$homepage,$accountpage,$searchpage,$logoutpage,$photospage,$settingspage,$profilepage;
+	global $mysqli,$enablecache,$purgepage,$membershippage,$indexpage,$candidatepage,$uploadpath,$matchpage,$sitepath,$contactemail,$explorepage,$inboxpage,$homepage,$accountpage,$searchpage,$logoutpage,$photospage,$settingspage,$profilepage,$cipher,$ivlen,$iv;
 	$mysqli = new mysqli("localhost", "root", "root", "dss");
 	$contactemail = "info@info.com";
 	$sitepath ="http://localhost/dss";
@@ -715,8 +723,7 @@ function start_app(){ /* Initialize Different Variables */
 	define("FA", 5);
 	define("BLHI", 6);
 	$uploadpath = $sitepath. "/upload_images/";
-	
-	error_reporting(0);
+	//error_reporting(0);
 	startSession();
 	update_session();
 	cron_session();
